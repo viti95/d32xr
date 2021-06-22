@@ -151,10 +151,10 @@ void R_SpritePrep(void)
       subsector_t *ss = *ssp;
       sector_t    *se = ss->sector;
 
-      if(se->validcount != validcount) // not already processed?
+      if(se->validcount != validcount[0]) // not already processed?
       {
          mobj_t *thing = se->thinglist;
-         se->validcount = validcount;  // mark it as processed
+         se->validcount = validcount[0];  // mark it as processed
 
          while(thing) // walk sector thing list
          {

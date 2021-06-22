@@ -39,9 +39,9 @@ na_sec = sec;		/* DEBUG */
 na_secnum = sec-sectors;
 
 /* wake up all monsters in this sector */
-	if (sec->validcount == validcount && sec->soundtraversed <= soundblocks+1)
+	if (sec->validcount == validcount[0] && sec->soundtraversed <= soundblocks+1)
 		return;		/* already flooded */
-	sec->validcount = validcount;
+	sec->validcount = validcount[0];
 	sec->soundtraversed = soundblocks+1;
 	sec->soundtarget = soundtarget;
 	
@@ -90,7 +90,7 @@ void P_NoiseAlert (player_t *player)
 	player->lastsoundsector = (void *)sec;
 	
 	soundtarget = player->mo;
-	validcount++;
+	validcount[0]++;
 	P_RecursiveSound (sec, 0);
 }
 

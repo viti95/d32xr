@@ -33,6 +33,9 @@ mobj_t		**blocklinks;			/* for thing chains */
 
 byte		*rejectmatrix;			/* for fast sight rejection */
 
+VINT		*lines_validcount;
+VINT		validcount[2];			/* increment every time a check is made */
+
 mapthing_t	deathmatchstarts[10], *deathmatch_p;
 mapthing_t	playerstarts[MAXPLAYERS];
 
@@ -314,7 +317,7 @@ void P_LoadLineDefs (int lump)
 	D_memset (lines, 0, numlines*sizeof(line_t));
 	data = I_TempBuffer ();
 	W_ReadLump (lump,data);
-	
+
 	mld = (maplinedef_t *)data;
 	ld = lines;
 	for (i=0 ; i<numlines ; i++, mld++, ld++)
@@ -585,6 +588,10 @@ D_printf ("P_SetupLevel(%i,%i)\n",lumpnum,skill);
 #else
 	rejectmatrix = W_CacheLumpNum (lumpnum+ML_REJECT,PU_LEVEL);
 #endif
+
+	lines_validcount = Z_Malloc(numlines * sizeof(*lines_validcount) * 2, PU_LEVEL, 0);
+	D_memset(lines_validcount, 0, numlines * sizeof(*lines_validcount) * 2);
+	validcount[0] = validcount[1] = 1;
 
 	P_GroupLines ();
 

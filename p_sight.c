@@ -31,6 +31,8 @@
 
 typedef struct
 {
+    VINT    validcount;
+    VINT    *lvalidcounts;
     fixed_t sightzstart;           // eye z of looker
     fixed_t topslope, bottomslope; // slopes to top and bottom of target
 
@@ -160,13 +162,15 @@ static boolean PS_CrossSubsector(sightWork_t *sw, int num)
 
    for( ; count; seg++, count--)
    {
+      VINT* lvc;
+
       line = seg->linedef;
+      lvc = &sw->lvalidcounts[line - lines];
 
       // allready checked other side?
-      //if(line->validcount == validcount)
-      //   continue;
-
-      //line->validcount = validcount;
+      if(*lvc == sw->validcount)
+         continue;
+      *lvc = sw->validcount;
 
       v1 = line->v1;
       v2 = line->v2;
@@ -276,7 +280,7 @@ static boolean PS_CrossBSPNode(sightWork_t* sw, int bspnum)
 //
 // Returns true if a straight line between t1 and t2 is unobstructed
 //
-static boolean PS_CheckSight(mobj_t *t1, mobj_t *t2)
+static boolean PS_CheckSight(mobj_t *t1, mobj_t *t2, VINT*vc, VINT *lvc)
 {
    int s1, s2;
    unsigned pnum, bytenum, bitnum;
@@ -308,8 +312,10 @@ static boolean PS_CheckSight(mobj_t *t1, mobj_t *t2)
    }
 
    // look from eyes of t1 to any part of t2
-   ++validcount;
+   *vc = *vc + 1;
 
+   sw.validcount = *vc;
+   sw.lvalidcounts = lvc;
    sw.sightzstart = t1->z + t1->height - (t1->height >> 2);
    sw.topslope    = (t2->z + t2->height) - sw.sightzstart;
    sw.bottomslope = (t2->z) - sw.sightzstart;
@@ -329,15 +335,17 @@ static boolean PS_CheckSight(mobj_t *t1, mobj_t *t2)
 // Optimal mobj sight checking that checks sights in the main tick loop rather
 // than from multiple mobj action routines.
 //
-static void P_CheckSightsMask(const int mask)
+static void P_CheckSightsMask(const int c)
 {
     mobj_t* mobj;
     int cnt = 0;
+    VINT* vc = &validcount[c];
+    VINT* lvc = lines_validcount + c * numlines;
 
     for (mobj = mobjhead.next; mobj != (void*)&mobjhead; mobj = mobj->next)
     {
         cnt++;
-        if ((cnt & 1) != mask)
+        if ((cnt & 1) != c)
             continue;
 
         // must be killable
@@ -354,7 +362,7 @@ static void P_CheckSightsMask(const int mask)
         if (!mobj->target)
             continue;
 
-        if (PS_CheckSight(mobj, mobj->target))
+        if (PS_CheckSight(mobj, mobj->target, vc, lvc))
             mobj->flags |= MF_SEETARGET;
     }
 }

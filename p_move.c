@@ -263,7 +263,7 @@ static void PM_CheckPosition(void)
    tmfloorz   = tmdropoffz = newsubsec->sector->floorheight;
    tmceilingz = newsubsec->sector->ceilingheight;
 
-   ++validcount;
+   validcount[0]++;
 
    movething = NULL;
    blockline = NULL;

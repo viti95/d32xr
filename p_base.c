@@ -244,7 +244,7 @@ static boolean PB_CheckPosition(mobj_t *mo)
    testfloorz   = testdropoffz = testsubsec->sector->floorheight;
    testceilingz = testsubsec->sector->ceilingheight;
 
-   ++validcount;
+   validcount[0]++;
 
    ceilingline = NULL;
    hitthing    = NULL;

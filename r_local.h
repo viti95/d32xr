@@ -272,8 +272,8 @@ extern	const fixed_t finetangent_[FINEANGLES/2];
 
 #define finetangent(x)		finetangent_[x]
 
-extern	VINT			validcount;
 extern	int			framecount;
+extern	VINT		validcount[2];
 
 #ifndef MARS
 extern	int		phasetime[9];

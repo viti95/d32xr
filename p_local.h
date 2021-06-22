@@ -230,6 +230,9 @@ extern	int			bmapwidth, bmapheight;	/* in mapblocks */
 extern	fixed_t		bmaporgx, bmaporgy;		/* origin of block map */
 extern	mobj_t		**blocklinks;			/* for thing chains */
 
+extern	VINT		*lines_validcount;
+extern	VINT		validcount[2];
+
 /*
 ===============================================================================
 
@@ -240,6 +243,7 @@ extern	mobj_t		**blocklinks;			/* for thing chains */
 
 extern	int		maxammo[NUMAMMO];
 extern	int		clipammo[NUMAMMO];
+
 
 void P_TouchSpecialThing (mobj_t *special, mobj_t *toucher);
 
