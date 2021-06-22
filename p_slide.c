@@ -382,13 +382,14 @@ static void SL_CheckSpecialLines(void)
          
          for(list = blockmaplump + offset; *list != -1; list++)
          {
-            ld = &lines[*list];
+            int l = *list;
+            ld = &lines[l];
             if(!ld->special)
                continue;
-            //if(ld->validcount == validcount)
-            //   continue; // already checked
+            if(lines_validcount[l] == validcount[0])
+               continue; // already checked
             
-            //ld->validcount = validcount;
+            lines_validcount[l] = validcount[0];
 
 	    ldbbox = P_LineBBox(ld);
             if(xh < ldbbox[BOXLEFT  ] ||
