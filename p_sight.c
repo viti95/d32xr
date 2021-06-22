@@ -44,7 +44,9 @@ int P_DivlineSide(fixed_t x, fixed_t y, divline_t* node) ATTR_DATA_CACHE_ALIGN A
 fixed_t P_InterceptVector2(divline_t* v2, divline_t* v1) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
 static boolean PS_CrossSubsector(sightWork_t* sw, int num) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
 static boolean PS_CrossBSPNode(sightWork_t* sw, int bspnum) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
-static boolean PS_CheckSight(mobj_t* t1, mobj_t* t2) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
+static boolean PS_CheckSight(mobj_t* t1, mobj_t* t2, VINT* vc, VINT* lvc) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
+static void P_CheckSightsMask(const int mask) __attribute__((always_inline));
+void P_CheckSights1(void) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
 void P_CheckSights2(void) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
 
 //
