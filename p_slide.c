@@ -385,10 +385,10 @@ static void SL_CheckSpecialLines(void)
             ld = &lines[*list];
             if(!ld->special)
                continue;
-            if(ld->validcount == validcount)
-               continue; // already checked
+            //if(ld->validcount == validcount)
+            //   continue; // already checked
             
-            ld->validcount = validcount;
+            //ld->validcount = validcount;
 
 	    ldbbox = P_LineBBox(ld);
             if(xh < ldbbox[BOXLEFT  ] ||

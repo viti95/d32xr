@@ -94,7 +94,7 @@ typedef enum {ST_HORIZONTAL, ST_VERTICAL, ST_POSITIVE, ST_NEGATIVE} slopetype_t;
 typedef struct line_s
 {
 	VINT            slopetype;                      /* to aid move clipping */
-	VINT		validcount;			/* if == validcount, already checked */
+	//VINT		validcount;			/* if == validcount, already checked */
 	VINT		flags;
 	VINT		special, tag;
 	VINT		sidenum[2];			/* sidenum[1] will be -1 if one sided */

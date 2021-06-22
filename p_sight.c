@@ -163,10 +163,10 @@ static boolean PS_CrossSubsector(sightWork_t *sw, int num)
       line = seg->linedef;
 
       // allready checked other side?
-      if(line->validcount == validcount)
-         continue;
+      //if(line->validcount == validcount)
+      //   continue;
 
-      line->validcount = validcount;
+      //line->validcount = validcount;
 
       v1 = line->v1;
       v2 = line->v2;
