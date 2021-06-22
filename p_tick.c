@@ -1,5 +1,6 @@
 #include "doomdef.h"
 #include "p_local.h"
+#include "mars.h"
 
 int	playertics, thinkertics, sighttics, basetics, latetics;
 int	tictics;
@@ -126,15 +127,30 @@ void P_RunThinkers (void)
 ===============
 */
 
-void P_CheckSights2 ();
+void P_CheckSights1(void) ATTR_DATA_CACHE_ALIGN;
+void P_CheckSights2(void) ATTR_DATA_CACHE_ALIGN;
+
+#ifdef MARS
+void Mars_Slave_P_CheckSights(void)
+{
+	Mars_ClearCache();
+	P_CheckSights2();
+}
+#endif
 
 void P_CheckSights (void)
 {
 #ifdef JAGUAR
 	extern	int p_sight_start;
 	DSPFunction (&p_sight_start);
+#elif defined(MARS)
+	Mars_P_BeginCheckSights();
+	P_CheckSights1();
+	Mars_P_EndCheckSights();
+	Mars_ClearCache();
 #else
-	P_CheckSights2 ();
+	P_CheckSights1();
+	P_CheckSights2();
 #endif
 }
 

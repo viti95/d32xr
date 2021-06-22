@@ -45,7 +45,7 @@ int		lasttics = 0;
 int 	debugmode = 0;
 
 extern int 	cy;
-extern int tictics;
+extern int tictics, thinkertics, sighttics, basetics, latetics;
 
 // framebuffer start is after line table AND a single blank line
 static volatile pixel_t* framebuffer = &MARS_FRAMEBUFFER + 0x100 + 160;
@@ -195,6 +195,7 @@ void Mars_Slave(void)
 			Mars_Slave_M_AnimateFire();
 			break;
 		case 9:
+			Mars_Slave_P_CheckSights();
 			break;
 		case 10:
 			Mars_Slave_InitSoundDMA();
@@ -495,11 +496,13 @@ void I_Update(void)
 		I_Print8(200, line++, buf);
 		D_snprintf(buf, sizeof(buf), "tcs:%d", lasttics);
 		I_Print8(200, line++, buf);
+		D_snprintf(buf, sizeof(buf), "t:%d/%d/%d", 
+			Mars_FRTCounter2Msec(tictics),
+			Mars_FRTCounter2Msec(sighttics), Mars_FRTCounter2Msec(basetics));
+		I_Print8(200, line++, buf);
 
 		line++;
 
-		D_snprintf(buf, sizeof(buf), "g:%2d", Mars_FRTCounter2Msec(tictics));
-		I_Print8(200, line++, buf);
 		D_snprintf(buf, sizeof(buf), "b:%2d", Mars_FRTCounter2Msec(t_ref_bsp_avg));
 		I_Print8(200, line++, buf);
 		D_snprintf(buf, sizeof(buf), "w:%2d %2d", Mars_FRTCounter2Msec(t_ref_segs_avg), lastwallcmd - viswalls);

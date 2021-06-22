@@ -329,29 +329,48 @@ static boolean PS_CheckSight(mobj_t *t1, mobj_t *t2)
 // Optimal mobj sight checking that checks sights in the main tick loop rather
 // than from multiple mobj action routines.
 //
+static void P_CheckSightsMask(const int mask)
+{
+    mobj_t* mobj;
+    int cnt = 0;
+
+    for (mobj = mobjhead.next; mobj != (void*)&mobjhead; mobj = mobj->next)
+    {
+        cnt++;
+        if ((cnt & 1) != mask)
+            continue;
+
+        // must be killable
+        if (!(mobj->flags & MF_COUNTKILL))
+            continue;
+
+        // must be about to change states
+        if (mobj->tics != 1)
+            continue;
+
+        mobj->flags &= ~MF_SEETARGET;
+
+        // must have a target
+        if (!mobj->target)
+            continue;
+
+        if (PS_CheckSight(mobj, mobj->target))
+            mobj->flags |= MF_SEETARGET;
+    }
+}
+
+//
+// Optimal mobj sight checking that checks sights in the main tick loop rather
+// than from multiple mobj action routines.
+//
+void P_CheckSights1(void)
+{
+    P_CheckSightsMask(0);
+}
+
 void P_CheckSights2(void)
 {
-   mobj_t *mobj;
-
-   for(mobj = mobjhead.next; mobj != (void *)&mobjhead; mobj = mobj->next)
-   {
-      // must be killable
-      if(!(mobj->flags & MF_COUNTKILL))
-         continue;
-
-      // must be about to change states
-      if(mobj->tics != 1)
-         continue;
-
-      mobj->flags &= ~MF_SEETARGET;
-
-      // must have a target
-      if(!mobj->target)
-         continue;
-
-      if(PS_CheckSight(mobj, mobj->target))
-         mobj->flags |= MF_SEETARGET;
-   }
+    P_CheckSightsMask(1);
 }
 
 // EOF
