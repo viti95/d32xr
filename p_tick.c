@@ -127,14 +127,17 @@ void P_RunThinkers (void)
 ===============
 */
 
-void P_CheckSights1(void) ATTR_DATA_CACHE_ALIGN;
-void P_CheckSights2(void) ATTR_DATA_CACHE_ALIGN;
+#ifdef MARS
+void P_CheckSights2(int c) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
+#else
+void P_CheckSights2(void) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
+#endif
 
 #ifdef MARS
 void Mars_Slave_P_CheckSights(void)
 {
 	Mars_ClearCache();
-	P_CheckSights2();
+	P_CheckSights2(1);
 }
 #endif
 
@@ -145,11 +148,10 @@ void P_CheckSights (void)
 	DSPFunction (&p_sight_start);
 #elif defined(MARS)
 	Mars_P_BeginCheckSights();
-	P_CheckSights1();
+	P_CheckSights2(0);
 	Mars_P_EndCheckSights();
 	Mars_ClearCache();
 #else
-	P_CheckSights1();
 	P_CheckSights2();
 #endif
 }

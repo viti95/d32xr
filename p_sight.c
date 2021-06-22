@@ -45,9 +45,6 @@ fixed_t P_InterceptVector2(divline_t* v2, divline_t* v1) ATTR_DATA_CACHE_ALIGN A
 static boolean PS_CrossSubsector(sightWork_t* sw, int num) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
 static boolean PS_CrossBSPNode(sightWork_t* sw, int bspnum) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
 static boolean PS_CheckSight(mobj_t* t1, mobj_t* t2, VINT* vc, VINT* lvc) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
-static void P_CheckSightsMask(const int mask) __attribute__((always_inline));
-void P_CheckSights1(void) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
-void P_CheckSights2(void) ATTR_DATA_CACHE_ALIGN ATTR_OPTIMIZE_SIZE;
 
 //
 // Returns side 0 (front), 1 (back), or 2 (on).
@@ -337,18 +334,27 @@ static boolean PS_CheckSight(mobj_t *t1, mobj_t *t2, VINT*vc, VINT *lvc)
 // Optimal mobj sight checking that checks sights in the main tick loop rather
 // than from multiple mobj action routines.
 //
-static void P_CheckSightsMask(const int c)
+#ifdef MARS
+void P_CheckSights2(int c)
+#else
+void P_CheckSights2(void)
+#endif
 {
     mobj_t* mobj;
-    int cnt = 0;
     VINT* vc = &validcount[c];
+#ifdef MARS
+    VINT* lvc = lines_validcount;
+#else
     VINT* lvc = lines_validcount + c * numlines;
+#endif
 
     for (mobj = mobjhead.next; mobj != (void*)&mobjhead; mobj = mobj->next)
     {
-        cnt++;
-        if ((cnt & 1) != c)
+#ifdef MARS
+        c ^= 1;
+        if (!c)
             continue;
+#endif
 
         // must be killable
         if (!(mobj->flags & MF_COUNTKILL))
@@ -367,20 +373,6 @@ static void P_CheckSightsMask(const int c)
         if (PS_CheckSight(mobj, mobj->target, vc, lvc))
             mobj->flags |= MF_SEETARGET;
     }
-}
-
-//
-// Optimal mobj sight checking that checks sights in the main tick loop rather
-// than from multiple mobj action routines.
-//
-void P_CheckSights1(void)
-{
-    P_CheckSightsMask(0);
-}
-
-void P_CheckSights2(void)
-{
-    P_CheckSightsMask(1);
 }
 
 // EOF
