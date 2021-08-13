@@ -213,7 +213,7 @@ typedef struct
 } plat_t;
 
 #define	PLATWAIT	3			/* seconds */
-#define	PLATSPEED	(FRACUNIT*2)
+#define	PLATSPEED	(FRACUNIT)
 #define	MAXPLATS	30
 
 extern	plat_t	*activeplats[MAXPLATS];

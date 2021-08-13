@@ -840,9 +840,9 @@ void P_MovePsprites (player_t *player)
 
 	ticremainder[playernum] += vblsinframe;
 	
-	while (ticremainder[playernum] >= ticrate)
+	while (ticremainder[playernum] >= 2)
 	{
-		ticremainder[playernum] -= ticrate;
+		ticremainder[playernum] -= 2;
 			
 		psp = &player->psprites[0];
 		for (i=0 ; i<NUMPSPRITES ; i++, psp++)

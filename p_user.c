@@ -97,7 +97,7 @@ dospecial:
 */ 
 
 #define	STOPSPEED		0x1000
-#define	FRICTION		0xd240
+#define	FRICTION		0xc800
 
 void P_PlayerXYMovement (mobj_t *mo) 
 { 	

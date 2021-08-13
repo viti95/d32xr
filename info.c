@@ -49,7 +49,7 @@ void A_BruisAttack ();
 void A_BossDeath ();
 void A_SkullAttack ();
 
-#define STATE(sprite,frame,tics,action,nextstate) {sprite,frame,tics,nextstate,action}
+#define STATE(sprite,frame,tics,action,nextstate) {sprite,frame,tics*2,nextstate,action}
 
 const state_t	states[NUMSTATES] = {
 STATE(SPR_TROO,0,-1,NULL,S_NULL),	/* S_NULL */
@@ -781,7 +781,7 @@ S_NULL,		/* missilestate */
 S_RBALLX1,		/* deathstate */
 S_NULL,		/* xdeathstate */
 sfx_firxpl,		/* deathsound */
-20*FRACUNIT,		/* speed */
+10*FRACUNIT,		/* speed */
 6*FRACUNIT,		/* radius */
 8*FRACUNIT,		/* height */
 100,		/* mass */
@@ -806,7 +806,7 @@ S_NULL,		/* missilestate */
 S_BRBALLX1,		/* deathstate */
 S_NULL,		/* xdeathstate */
 sfx_firxpl,		/* deathsound */
-30*FRACUNIT,		/* speed */
+15*FRACUNIT,		/* speed */
 6*FRACUNIT,		/* radius */
 8*FRACUNIT,		/* height */
 100,		/* mass */
@@ -831,7 +831,7 @@ S_NULL,		/* missilestate */
 S_EXPLODE1,		/* deathstate */
 S_NULL,		/* xdeathstate */
 sfx_barexp,		/* deathsound */
-40*FRACUNIT,		/* speed */
+20*FRACUNIT,		/* speed */
 11*FRACUNIT,		/* radius */
 8*FRACUNIT,		/* height */
 100,		/* mass */
@@ -856,7 +856,7 @@ S_NULL,		/* missilestate */
 S_PLASEXP,		/* deathstate */
 S_NULL,		/* xdeathstate */
 sfx_firxpl,		/* deathsound */
-50*FRACUNIT,		/* speed */
+25*FRACUNIT,		/* speed */
 13*FRACUNIT,		/* radius */
 8*FRACUNIT,		/* height */
 100,		/* mass */
@@ -881,7 +881,7 @@ S_NULL,		/* missilestate */
 S_BFGLAND,		/* deathstate */
 S_NULL,		/* xdeathstate */
 sfx_rxplod,		/* deathsound */
-30*FRACUNIT,		/* speed */
+15*FRACUNIT,		/* speed */
 13*FRACUNIT,		/* radius */
 8*FRACUNIT,		/* height */
 100,		/* mass */
