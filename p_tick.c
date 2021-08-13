@@ -291,12 +291,33 @@ int		ticphase;
 #define frtc samplecount
 #endif
 
+#include "32x.h"
+
 int P_Ticker (void)
 {
 	int		start;
 	int		ticstart;
 	player_t	*pl;
-	
+	int	entertic, realtics, prevtic, curtic, allmsec;
+	boolean NTSC = (MARS_VDP_DISPMODE & MARS_NTSC_FORMAT) != 0;
+	static int oldentertic = 0, alltics = 0, extramsec = 0;
+	static const int minmsec = 33;
+	static const int NTSCmsecperTic16 = 65536 * 1000 / 60;
+	static const int PALmsecperTic16 = 65536 * 1000 / 50;
+
+	entertic = I_GetTime();
+	realtics = entertic - oldentertic;
+	oldentertic = entertic;
+	alltics += realtics;
+
+	if (NTSC)
+		allmsec = (alltics * NTSCmsecperTic16) >> 16;
+	else
+		allmsec = (alltics * PALmsecperTic16) >> 16;
+	if (allmsec + extramsec < minmsec)
+		return 0;
+
+	prevtic = entertic;
 	if (demoplayback)
 	{
 		if (M_Ticker())
@@ -304,80 +325,107 @@ int P_Ticker (void)
 	}
 
 	ticstart = frtc;
-	
-	while (!I_RefreshLatched () )
-	;		/* wait for refresh to latch all needed data before */
-			/* running the next tick */
+
+	while (!I_RefreshLatched())
+		;		/* wait for refresh to latch all needed data before */
+				/* running the next tick */
 
 #ifdef JAGAUR
-	while (DSPRead (&dspfinished) != 0xdef6)
-	;		/* wait for sound mixing to complete */
+	while (DSPRead(&dspfinished) != 0xdef6)
+		;		/* wait for sound mixing to complete */
 #endif
 
 	gameaction = ga_nothing;
-	
-	gametic++; 		 
- 
-/* */
-/* check for pause and cheats */
-/* */
-	P_CheckCheats ();
-	
-/* */
-/* do option screen processing */
-/* */
 
-	for (playernum=0,pl=players ; playernum<MAXPLAYERS ; playernum++,pl++)
+	/* */
+	/* check for pause and cheats */
+	/* */
+	P_CheckCheats();
+
+	/* */
+	/* do option screen processing */
+	/* */
+
+	for (playernum = 0, pl = players; playernum < MAXPLAYERS; playernum++, pl++)
 		if (playeringame[playernum])
-			O_Control (pl);
-
+			O_Control(pl);
 
 	if (gamepaused)
+	{
+		alltics = 0;
 		return 0;
+	}
 
-/* */
-/* run player actions */
-/* */
-	start = frtc;
-	for (playernum=0,pl=players ; playernum<MAXPLAYERS ; playernum++,pl++)
-		if (playeringame[playernum])
-		{
-			if (pl->playerstate == PST_REBORN) 
-				G_DoReborn (playernum); 
-			AM_Control (pl);
-			P_PlayerThink (pl);
-		}
-	playertics = frtc - start;
-	
-	
-	start = frtc;
-	P_RunThinkers ();
-	thinkertics = frtc - start;
-		
-	start = frtc;
-	P_CheckSights ();	
-	sighttics = frtc - start;
+	do
+	{
+		if (allmsec < minmsec)
+			extramsec -= minmsec - allmsec;
+		else
+			extramsec = allmsec - minmsec;
+		if (extramsec < 0)
+			extramsec = 0;
+		else if (extramsec > minmsec)
+			extramsec = minmsec;
 
-	start = frtc;
-	P_RunMobjBase ();
-	basetics = frtc - start;
+		gametic++;
 
-	start = frtc;
-	P_RunMobjLate ();
-	latetics = frtc - start;
+		/* */
+		/* run player actions */
+		/* */
+		start = frtc;
+		for (playernum = 0, pl = players; playernum < MAXPLAYERS; playernum++, pl++)
+			if (playeringame[playernum])
+			{
+				if (pl->playerstate == PST_REBORN)
+					G_DoReborn(playernum);
+				AM_Control(pl);
+				P_PlayerThink(pl);
+			}
+		playertics = frtc - start;
 
-	P_UpdateSpecials ();
 
-	P_RespawnSpecials ();
-	
-	ST_Ticker ();			/* update status bar */
-		
+		start = frtc;
+		P_RunThinkers();
+		thinkertics = frtc - start;
+
+		start = frtc;
+		P_CheckSights();
+		sighttics = frtc - start;
+
+		start = frtc;
+		P_RunMobjBase();
+		basetics = frtc - start;
+
+		start = frtc;
+		P_RunMobjLate();
+		latetics = frtc - start;
+
+		P_UpdateSpecials();
+
+		P_RespawnSpecials();
+
+		alltics = 0;
+		allmsec = 0;
+
+		if (gameaction != ga_nothing)
+			break;
+
+		if (extramsec < minmsec)
+			break;
+
+		while ((curtic = I_GetTime()) == prevtic);
+		prevtic = entertic;
+
+		vblsinframe = 0;
+	} while (1);
+
+	ST_Ticker();			/* update status bar */
+
 	tictics = frtc - ticstart;
 
 	return gameaction;		/* may have been set to ga_died, ga_completed, */
 							/* or ga_secretexit */
 }
-
 
 /* 
 ============= 
