@@ -5,14 +5,14 @@
 #include "st_main.h"
 
 
-fixed_t 		forwardmove[2] = {0x38000, 0x60000}; 
-fixed_t 		sidemove[2] = {0x38000, 0x58000}; 
+fixed_t 		forwardmove[2] = {0x24000, 0x36000}; 
+fixed_t 		sidemove[2] = {0x19000, 0x24000}; 
 
 #define SLOWTURNTICS    10
 fixed_t			angleturn[] =
-	{300,300,500,500,600,700,800,900,900,1000};
+	{150,150,250,250,300,350,400,450,450,500};
 fixed_t			fastangleturn[] =
-	{800,800,900,1000,1000,1200,1200,1300,1300,1400};
+	{400,400,450,500,500,600,600,650,650,700};
 	
 
 /*============================================================================= */
@@ -97,7 +97,7 @@ dospecial:
 */ 
 
 #define	STOPSPEED		0x1000
-#define	FRICTION		0xc800
+#define	FRICTION		0xd800
 
 void P_PlayerXYMovement (mobj_t *mo) 
 { 	
