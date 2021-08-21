@@ -268,6 +268,7 @@ void Mars_WriteSRAM(const uint8_t* buffer, int offset, int len)
 
 void Mars_UpdateCD(void)
 {
+	return;
 	while (MARS_SYS_COMM0);
 	MARS_SYS_COMM0 = 0x0600;
 	while (MARS_SYS_COMM0);
@@ -289,7 +290,7 @@ void Mars_UseCD(int usecd)
 void Mars_PlayTrack(char usecd, int playtrack, void *vgmptr, char looping)
 {
 	Mars_UseCD(usecd);
-
+	return;
 	if (usecd)
 	{
 		MARS_SYS_COMM2 = looping;

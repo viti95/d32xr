@@ -118,7 +118,7 @@ uint16_t InitCD(void)
 
 int main(void)
 {
-    cd_ok = InitCD();
+    cd_ok = /*InitCD()*/0;
 
     /*
      * Main loop in ram - you need to have it in ram to avoid bus contention

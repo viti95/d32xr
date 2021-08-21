@@ -68,7 +68,7 @@ void ReadGame(int slotnumber)
 	savegame_t sg;
 	const int offset = slotnumber * SRAM_SLOTSIZE;
 
-	if (slotnumber >= optslotnumber)
+	//if (slotnumber >= optslotnumber)
 		return;
 
 	D_memset(&sg, 0, sizeof(savegame_t));
@@ -93,7 +93,7 @@ static void SaveGameExt(int slotnumber, int mapnum)
 	savegame_t sg;
 	const int offset = slotnumber * SRAM_SLOTSIZE;
 
-	if (slotnumber >= optslotnumber)
+	//if (slotnumber >= optslotnumber)
 		return;
 
 	sg.version = SRAM_VERSION;
@@ -124,7 +124,7 @@ boolean GetSaveInfo(int slotnumber, VINT* mapnum, VINT* skill)
 	savegame_t sg;
 	const int offset = slotnumber * SRAM_SLOTSIZE;
 
-	if (slotnumber >= optslotnumber)
+	//if (slotnumber >= optslotnumber)
 		return false;
 
 	D_memset(&sg, 0, sizeof(savegame_t));
@@ -149,6 +149,8 @@ int SaveCount(void)
 	uint8_t temp;
 	int offset = 0;
 
+	return 0;
+
 	Mars_StopSoundMixer();
 
 	// the last slot is used for storing game options
@@ -167,6 +169,8 @@ int SaveCount(void)
 static void SaveOptions(void)
 {
 	saveopts_t so;
+
+	return;
 
 	D_memset(&so, 0, sizeof(saveopts_t));
 
@@ -189,6 +193,8 @@ static void SaveOptions(void)
 static void ReadOptions(void)
 {
 	saveopts_t so;
+
+	return;
 
 	D_memset(&so, 0, sizeof(saveopts_t));
 
@@ -229,6 +235,8 @@ void ClearEEProm(void)
 {
 	saveopts_t so;
 
+	return;
+
 	D_memset(&so, 0, sizeof(saveopts_t));
 
 	Mars_StopSoundMixer();
@@ -247,6 +255,7 @@ void ReadEEProm(void)
 	viewportNum = 0;
 	musictype = mustype_fm;
 
+	return;
 	ReadOptions();
 }
 

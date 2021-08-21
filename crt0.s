@@ -481,6 +481,7 @@ master_v_irq:
 
         mov.l   mvi_mars_adapter,r1
         mov.w   r0,@(0x16,r1)           /* clear V IRQ */
+        mov.w   r0,@(0x16,r1)           /* clear V IRQ */        
         nop
         nop
         nop
@@ -522,6 +523,7 @@ master_h_irq:
 
         mov.l   mhi_mars_adapter,r1
         mov.w   r0,@(0x18,r1)           /* clear H IRQ */
+        mov.w   r0,@(0x18,r1)           /* clear H IRQ */        
         nop
         nop
         nop
@@ -547,6 +549,7 @@ master_cmd_irq:
 
         mov.l   mci_mars_adapter,r1
         mov.w   r0,@(0x1A,r1)           /* clear CMD IRQ */
+        mov.w   r0,@(0x1A,r1)           /* clear CMD IRQ */        
         nop
         nop
         nop
@@ -572,6 +575,7 @@ master_pwm_irq:
 
         mov.l   mpi_mars_adapter,r1
         mov.w   r0,@(0x1C,r1)           /* clear PWM IRQ */
+        mov.w   r0,@(0x1C,r1)           /* clear PWM IRQ */        
         nop
         nop
         nop
@@ -595,6 +599,7 @@ mpi_mars_adapter:
 master_vres_irq:
         mov.l   mvri_mars_adapter,r1
         mov.w   r0,@(0x14,r1)           /* clear VRES IRQ */
+        mov.w   r0,@(0x14,r1)           /* clear VRES IRQ */        
         nop
         nop
         nop

@@ -430,7 +430,8 @@ int I_ReadMouse(int* pmx, int *pmy)
 
 int	I_GetTime (void)
 {
-	return Mars_GetTicCount();
+	//return Mars_GetTicCount();
+	return MARS_SYS_COMM12;
 }
 
 int I_GetFRTCounter(void)
