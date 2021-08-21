@@ -332,7 +332,8 @@ void I_Init (void)
 
 void I_SetPalette(const byte* palette)
 {
-	mars_newpalette = palette;
+	//mars_newpalette = palette;
+	Mars_UploadPalette(palette);
 }
 
 boolean	I_RefreshCompleted (void)
@@ -382,6 +383,10 @@ int I_ReadControls(void)
 {
 	int ctrl;
 	unsigned val;
+
+	mars_controls |= *mars_gamepadport;
+	if (mars_gamepadport2)
+		mars_controls2 |= *mars_gamepadport2;
 
 	val = mars_controls;
 	mars_controls = 0;

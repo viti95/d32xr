@@ -218,13 +218,14 @@ void Mars_Init(void)
 	mars_controls2 = 0;
 
 	Mars_UpdateCD();
-
+#if 0
 	if (mars_cd_ok)
 	{
 		/* give the CD two seconds to init */
 		i = mars_vblank_count + 120;
 		while (i > mars_vblank_count) ;
 	}
+#endif
 }
 
 void master_vbi_handler(void)
