@@ -370,7 +370,7 @@ master_start:
         mov     #0x80,r0
         mov.l   _master_adapter,r1
         mov.b   r0,@r1                  /* set FM */
-        mov     #0x00,r0
+        mov     #0x02,r0
         mov.b   r0,@(1,r1)              /* set int enables */
         mov     #0x20,r0
         ldc     r0,sr                   /* allow ints */
@@ -468,16 +468,7 @@ master_irq:
 
 master_v_irq:
         ! save registers
-        sts.l   pr,@-r15
         mov.l   r1,@-r15
-        mov.l   r2,@-r15
-        mov.l   r3,@-r15
-        mov.l   r4,@-r15
-        mov.l   r5,@-r15
-        mov.l   r6,@-r15
-        mov.l   r7,@-r15
-        sts.l   mach,@-r15
-        sts.l   macl,@-r15
 
         mov.l   mvi_mars_adapter,r1
         mov.w   r0,@(0x16,r1)           /* clear V IRQ */
@@ -489,21 +480,8 @@ master_v_irq:
 
         ! handle V IRQ
 
-        mov.l   mvbi_handler_ptr,r0
-        jsr     @r0
-        nop
-
         ! restore registers
-        lds.l   @r15+,macl
-        lds.l   @r15+,mach
-        mov.l   @r15+,r7
-        mov.l   @r15+,r6
-        mov.l   @r15+,r5
-        mov.l   @r15+,r4
-        mov.l   @r15+,r3
-        mov.l   @r15+,r2
         mov.l   @r15+,r1
-        lds.l   @r15+,pr
         mov.l   @r15+,r0
         rte
         nop
@@ -511,8 +489,6 @@ master_v_irq:
         .align  2
 mvi_mars_adapter:
         .long   0x20004000
-mvbi_handler_ptr:
-        .long   _master_vbi_handler
 
 !-----------------------------------------------------------------------
 ! Master H Blank IRQ handler
@@ -545,7 +521,17 @@ mhi_mars_adapter:
 !-----------------------------------------------------------------------
 
 master_cmd_irq:
+        ! save registers
+        sts.l   pr,@-r15
         mov.l   r1,@-r15
+        mov.l   r2,@-r15
+        mov.l   r3,@-r15
+        mov.l   r4,@-r15
+        mov.l   r5,@-r15
+        mov.l   r6,@-r15
+        mov.l   r7,@-r15
+        sts.l   mach,@-r15
+        sts.l   macl,@-r15
 
         mov.l   mci_mars_adapter,r1
         mov.w   r0,@(0x1A,r1)           /* clear CMD IRQ */
@@ -556,8 +542,21 @@ master_cmd_irq:
         nop
 
         ! handle CMD IRQ
+        mov.l   mci_handler_ptr,r0
+        jsr     @r0
+        nop
 
+        ! restore registers
+        lds.l   @r15+,macl
+        lds.l   @r15+,mach
+        mov.l   @r15+,r7
+        mov.l   @r15+,r6
+        mov.l   @r15+,r5
+        mov.l   @r15+,r4
+        mov.l   @r15+,r3
+        mov.l   @r15+,r2
         mov.l   @r15+,r1
+        lds.l   @r15+,pr
         mov.l   @r15+,r0
         rte
         nop
@@ -565,6 +564,8 @@ master_cmd_irq:
         .align  2
 mci_mars_adapter:
         .long   0x20004000
+mci_handler_ptr:
+        .long   _master_vbi_handler
 
 !-----------------------------------------------------------------------
 ! Master PWM IRQ handler

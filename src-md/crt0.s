@@ -581,6 +581,8 @@ vert_blank:
         addq.l  #1,d0
         move.l  d0,0xA1512C         /* increment the vblank count */
 
+        move.b  #1,0xA15102         /* trigger CMD interrupt on master SH-2 */
+
         tst.w   gen_lvl2
         beq.b   2f
         lea     0xA12000,a0
